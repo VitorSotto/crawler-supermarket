@@ -1,16 +1,18 @@
+import numpy
 from time import sleep
 
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 import pandas as pd
+from unidecode import unidecode
 
 from mercados.mercado import Mercado
 
 class CrawlerSuperTonin(Mercado):
-    
-    dataProducts = []
         
     def Browsingsite(self):
+        print('configurando...')
+        
         url = "https://www.supertonin.com.br/"
         self.browser.get(url)
         sleep(2)
@@ -24,59 +26,76 @@ class CrawlerSuperTonin(Mercado):
         select_city.click()
         sleep(0.5)
         
+        print('configuração concluida!')
+        print()
+        
     def Getsearch(self):
-
+        print('fazendo a busca...')
         url = "https://www.supertonin.com.br/busca?order=PD&q=" + self.searchProduct
         self.browser.get(url)
+        print('busca feita!')
+        print()
 
     def Getprodutos(self):
-        page_content = self.browser.page_source
-
-        site = BeautifulSoup(page_content, 'html.parser')
-        # busca de todos os produtos
-        product_list = site.findAll('div', attrs={'class': 'produto'})
-        # elemento ul trazendo a quantidade de li(s) que o elemento possui
-        paginations = self.browser.find_element(By.CSS_SELECTOR,'.pagination').text
         
-        for pages in paginations:
+        print('carregando produtos...')
+        
+        dataProducts = []
+
+        # elemento ul trazendo a quantidade de li(s) que o elemento possui
+        paginations = self.browser.find_elements(By.CSS_SELECTOR, 'ul.pagination > li')
+        page = 1
+        
+        while (page <= numpy.size(paginations)):
+            # print(pages.text)
+            url_page = "https://www.supertonin.com.br/busca?order=PD&q=" + self.searchProduct + "&pg=" + str(page)
+            # print(url_page)
+            self.browser.get(url_page)
+            sleep(10)
+            
+            page_content = self.browser.page_source
+
+            site = BeautifulSoup(page_content, 'html.parser')
+            # busca de todos os produtos
+            product_list = site.findAll('div', attrs={'class': 'produto'})
 
             for products in product_list:
 
-                product_name = products.find('a', attrs={'class': 'ng-binding'}).text
+                product_name = products.select('div.title > a')[0].text
                 
-                if (product_name.lower().find(self.searchProduct.lower()) == 0):
+                if (product_name.lower().find(unidecode(self.searchProduct.lower())) == 0):
 
                     product_category = self.searchProduct
                     product_seller = products.find('div', attrs={'class': 'fabricante ng-binding'}).text
                     product_market = 'Tonin'
                     product_image = products.find('img', attrs={'class': 'produto-img lazy'})['src']
                     product_price = products.find('span', attrs={'class': 'ng-binding'}).text
-                    product_price = product_price.replace('Por: R$', '').replace(',','.')
+                    product_price = float(product_price.replace('Por: R$', '').replace('De: R$ ', '').replace(',','.'))
+                    
+                    dataProducts.append([product_name, product_category, product_seller, product_market, product_image, product_price])
+            page += 1
 
-                    # print("Nome do produto: ", product_name)
-                    # print("Categoria: ", product_category)
-                    # print("Fabricante: ", product_seller.text)
-                    # print("Mercado: ", product_market)
-                    # print("Imagem: ", product_image)
-                    # print("Preço: ", product_price)
+        data = pd.DataFrame(dataProducts, columns=['Nome', 'Categoria', 'Fornecedor', 'Mercado', 'Imagem', 'Preco']).sort_values('Preco')
+        # print(data)
 
-                    # print()
-                    # recuperar a li, trazer a quantidade, laço de repetição chamando o get produtos passando a nova url
-                    self.dataProducts.append([product_name, product_category, product_seller, product_market, product_image, product_price])
-
-        data = pd.DataFrame(self.dataProducts, columns=['Nome', 'Categoria', 'Fornecedor', 'Mercado', 'Imagem', 'Preço']).sort_values('Preço')
-        print(data)
-
-        url = "https://www.supertonin.com.br/busca?order=PD&q=" + self.searchProduct + "pg=" + pages
-        self.browser.get(url)
-
+        print(f'produtos encontrados: {numpy.size(dataProducts)}')
+        print('carregamento concluido!')
+        print()
+        
         return data
 
     def processa(self):
+        print('### INCIANDO SUPERTONIN ###')
+        print()
+        
         self.Browsingsite()
-        sleep(10)
+        sleep(5)
         self.Getsearch()
-        sleep(10)
+        sleep(5)
         data = self.Getprodutos()
+        
+        print('### SUPERTONIN CONCLUIDO! ###')
+        print()
+        
         return data.iloc[0]
 

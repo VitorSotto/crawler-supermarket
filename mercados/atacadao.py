@@ -55,7 +55,7 @@ class CrawlerAtacadao(Mercado):
       print()
 
     def loading(self):
-      print('Carregando produtos...')
+      print('carregando produtos...')
       
       footer = self.browser.find_element(By.TAG_NAME, 'footer')
       navFooter = footer.find_element(By.TAG_NAME, 'nav')
@@ -106,6 +106,9 @@ class CrawlerAtacadao(Mercado):
       return data
 
     def processa(self):
+      print('### INCIANDO ATACADAO ###')
+      print()
+      
       self.browser.get('https://www.atacadao.com.br/')
 
       sleep(15)
@@ -130,6 +133,7 @@ class CrawlerAtacadao(Mercado):
 
       data = self.getProduct()
       
+      print('### ATACADAO CONCLUIDO! ###')
+      print()
+      
       return data.iloc[0]
-
-      # sleep(5)

@@ -10,6 +10,7 @@ import pandas as pd
 
 from mercados.atacadao import CrawlerAtacadao
 from mercados.supertonin import CrawlerSuperTonin
+from mercados.savegnago import CrawlerSavegnago
 
 homedir = os.path.expanduser("~")
 service = Service(f"{homedir}/chromedriver/stable/chromedriver")
@@ -44,6 +45,10 @@ for searchProduct in searchProducts:
   # Busca dos produtos no SuperTonin
   crawlerSuperTonin = CrawlerSuperTonin(searchProduct, browser)
   products.append(crawlerSuperTonin.processa())
+  
+  # Busca dos produtos no Savegnago
+  # crawlerSavegnago = CrawlerSavegnago(searchProduct, browser)
+  # products.append(crawlerSavegnago.processa())
   
   browser.close()
   print('Busca concluida!')
