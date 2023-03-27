@@ -15,14 +15,16 @@ class CrawlerSuperTonin(Mercado):
         
         url = "https://www.supertonin.com.br/"
         self.browser.get(url)
-        sleep(2)
+        sleep(5)
         element = self.browser.find_element(By.CSS_SELECTOR,'a.popup-next-tip:nth-child(4)')
         element.click()
         sleep(0.5)
         to_click = self.browser.find_element(By.CSS_SELECTOR,'.header-text > div:nth-child(2)')
         to_click.click()
         sleep(0.5)
-        select_city = self.browser.find_element(By.XPATH,'/html/body/header/div[2]/div/div[2]/div/div[3]/div/div/div[2]/div/div[2]/div[2]/div/div/div[1]/div[3]/div[1]/div')
+        
+        # select_city = self.browser.find_element(By.XPATH,'/html/body/header/div[2]/div/div[2]/div/div[3]/div/div/div[2]/div/div[2]/div[2]/div/div/div[1]/div[3]/div[1]/div')
+        select_city = self.browser.find_element(By.CSS_SELECTOR,'div[tooltip="Araraquara - Vl. Santana - LJ 11 - Superatacado"]')
         select_city.click()
         sleep(0.5)
         
