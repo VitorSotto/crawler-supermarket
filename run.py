@@ -47,8 +47,8 @@ for searchProduct in searchProducts:
   products.append(crawlerSuperTonin.processa())
   
   # Busca dos produtos no Savegnago
-  # crawlerSavegnago = CrawlerSavegnago(searchProduct, browser)
-  # products.append(crawlerSavegnago.processa())
+  crawlerSavegnago = CrawlerSavegnago(searchProduct, browser)
+  products.append(crawlerSavegnago.processa())
   
   browser.close()
   print('Busca concluida!')

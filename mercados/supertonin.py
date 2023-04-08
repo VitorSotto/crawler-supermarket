@@ -18,7 +18,7 @@ class CrawlerSuperTonin(Mercado):
         sleep(5)
         element = self.browser.find_element(By.CSS_SELECTOR,'a.popup-next-tip:nth-child(4)')
         element.click()
-        sleep(0.5)
+        sleep(2)
         to_click = self.browser.find_element(By.CSS_SELECTOR,'.header-text > div:nth-child(2)')
         to_click.click()
         sleep(0.5)
