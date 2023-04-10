@@ -33,27 +33,27 @@ with open(arquivo_abs_caminho, 'r') as arq:
 products = []
 
 print('=============================================================')
-for searchProduct in searchProducts:
-  print(f"Buscando por {searchProduct}...")
-  print()
-  browser = webdriver.Chrome(service=service,options=options)
-  
-  # Busca dos produtos no Atacacão
-  crawlerAtacadao = CrawlerAtacadao(searchProduct, browser)
-  products.append(crawlerAtacadao.processa())
-  
-  # Busca dos produtos no SuperTonin
-  crawlerSuperTonin = CrawlerSuperTonin(searchProduct, browser)
-  products.append(crawlerSuperTonin.processa())
-  
-  # Busca dos produtos no Savegnago
-  crawlerSavegnago = CrawlerSavegnago(searchProduct, browser)
-  products.append(crawlerSavegnago.processa())
-  
-  browser.close()
-  print('Busca concluida!')
-  print('=============================================================')
-  sleep(1)
+print()
+
+#inciando browser
+browser = webdriver.Chrome(service=service,options=options)
+
+# Busca dos produtos no Atacacão
+crawlerAtacadao = CrawlerAtacadao(searchProducts, browser)
+products.append(crawlerAtacadao.processa())
+
+# Busca dos produtos no SuperTonin
+crawlerSuperTonin = CrawlerSuperTonin(searchProducts, browser)
+products.append(crawlerSuperTonin.processa())
+
+# Busca dos produtos no Savegnago
+crawlerSavegnago = CrawlerSavegnago(searchProducts, browser)
+products.append(crawlerSavegnago.processa())
+
+browser.close()
+print('Busca concluida!')
+print('=============================================================')
+sleep(1)
 
 data = pd.DataFrame(products, columns=['Nome', 'Categoria', 'Fornecedor', 'Mercado', 'Imagem', 'Preco'])
 
