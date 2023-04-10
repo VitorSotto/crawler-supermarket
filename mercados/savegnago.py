@@ -103,7 +103,7 @@ class CrawlerSavegnago(Mercado):
 
       #preco_prod = float(unicodedata.normalize('NFKD', product.find('p', attrs={'class':'savegnagoio-store-theme-6-x-priceUnit'}).text).replace('R$ ', '').replace(',', '.'))
       if indisponivel is None:
-        preco_prod = float(product.find('p', attrs={'class':'savegnagoio-store-theme-6-x-priceUnit'}).text.replace(u'\xa0', u' ').replace('R$ ', '').replace(',', '.'))
+        preco_prod = float(product.find('p', attrs={'class':'savegnagoio-store-theme-7-x-priceUnit'}).text.replace(u'\xa0', u' ').replace('R$ ', '').replace(',', '.'))
       img_prod = product.find('img', attrs={'class':'vtex-product-summary-2-x-imageNormal vtex-product-summary-2-x-image'})['src']
 
       self.list_products.append([name_prod, category_prod, supplier_prod, market_prod, img_prod, preco_prod])
@@ -113,7 +113,7 @@ class CrawlerSavegnago(Mercado):
    
       
     # df = dataproducts.sort_values('Preco')
-    # print(dataproducts)
+    print(dataproducts)
 
     return dataproducts
       
