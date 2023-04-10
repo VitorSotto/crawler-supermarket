@@ -14,7 +14,7 @@ from mercados.mercado import Mercado
 
 class CrawlerSavegnago(Mercado):
 
-  list_products = []
+  
 
   def insertCEP(self):
       button_cep = self.browser.find_element(By.XPATH, '/html/body/div[2]/div/div[1]/div/div[2]/div/div[1]/section/div/div[2]/div/div/div[1]/div')
@@ -34,22 +34,20 @@ class CrawlerSavegnago(Mercado):
       b_insertcep.click()
       sleep(3)
 
-  def Searching(self):
+  def Searching(self, searchProduct):
     url_base =  "https://www.savegnago.com.br/" 
-    url_svng = (url_base + self.searchProduct)
+    url_svng = (url_base + searchProduct)
     self.browser.get(url_svng)
 
-  def FilterProducts(self):
+  def FilterProducts(self, searchProduct):
     try:
-      input_filter = self.browser.find_element(By.CSS_SELECTOR, f'input[value="{self.searchProduct}"]')
+      input_filter = self.browser.find_element(By.CSS_SELECTOR, f'input[value="{searchProduct}"]')
       ActionChains(self.browser).scroll_to_element(input_filter).perform()
       sleep(0.5)
       ActionChains(self.browser).click(input_filter).perform()
 
     except NoSuchElementException:
       print('Filtro não encontrado!')
-
-
 
   def OrderByPrice(self):
     # Menor preço
@@ -61,7 +59,6 @@ class CrawlerSavegnago(Mercado):
     btn_menPre2.click()
     sleep(2)
   
-
   def LoadingSite(self):
    # loading = False
     wait = WebDriverWait(self.browser, 10)
@@ -79,9 +76,10 @@ class CrawlerSavegnago(Mercado):
         print('carregamento concluido!')
         break
         
-        
+  
+  def GetProducts(self, searchProduct):
 
-  def GetProducts(self):
+    list_products = []
     sleep(2)
     page_content = self.browser.page_source
 
@@ -97,7 +95,7 @@ class CrawlerSavegnago(Mercado):
 
       name_prod = product.find('span', attrs={'class':'vtex-product-summary-2-x-productBrand vtex-product-summary-2-x-brandName t-body'}).text
 
-      category_prod = self.searchProduct   
+      category_prod = searchProduct   
       supplier_prod = ''
       market_prod = 'Savegnago'   
 
@@ -106,44 +104,50 @@ class CrawlerSavegnago(Mercado):
         preco_prod = float(product.find('p', attrs={'class':'savegnagoio-store-theme-7-x-priceUnit'}).text.replace(u'\xa0', u' ').replace('R$ ', '').replace(',', '.'))
       img_prod = product.find('img', attrs={'class':'vtex-product-summary-2-x-imageNormal vtex-product-summary-2-x-image'})['src']
 
-      self.list_products.append([name_prod, category_prod, supplier_prod, market_prod, img_prod, preco_prod])
+      list_products.append([name_prod, category_prod, supplier_prod, market_prod, img_prod, preco_prod])
 
       #print(f'produtos encontrados: {np.size(products)}')
-      dataproducts = pd.DataFrame(self.list_products, columns=['Nome', 'Categoria', 'Fornecedor', 'Mercado', 'Imagem', 'Preco']).sort_values('Preco')
+      dataproducts = []
+      dataproducts = pd.DataFrame(list_products, columns=['Nome', 'Categoria', 'Fornecedor', 'Mercado', 'Imagem', 'Preco']).sort_values('Preco')
    
       
     # df = dataproducts.sort_values('Preco')
-    print(dataproducts)
+    
+    print(dataproducts.iloc[0])
 
-    return dataproducts
+    return dataproducts.iloc[0]
       
 
-  def processa(self):
+  def processa(self, products):
       print('### INCIANDO SAVEGNAGO ###')
       print()
-    
-      self.Searching()
-      sleep(10)
+
+      self.browser.get("https://www.savegnago.com.br/")
+      sleep(5)
 
       self.insertCEP()
       sleep(5)
 
-      self.OrderByPrice()
-      sleep(5)
+      for searchProduct in self.searchProducts:
+        self.Searching(searchProduct)
+        sleep(10)
 
-      self.FilterProducts()
-      sleep(5)
-      
-      self.LoadingSite()
-      sleep(10)
+        self.OrderByPrice()
+        sleep(5)
 
-      data = self.GetProducts()
-      sleep(10)
-      print("produtos carregados")
+        self.FilterProducts(searchProduct)
+        sleep(5)
+        
+        self.LoadingSite()
+        sleep(10)
+
+        products.append(self.GetProducts(searchProduct))
+        sleep(10)
+        print("produtos carregados")
       
       print('### SAVEGNAGO CONCLUIDO! ###')
       print()
-      
-      return data.iloc[0]
+        
+     
 
     
