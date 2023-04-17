@@ -112,8 +112,3 @@ class CrawlerSuperTonin(Mercado):
         
         print('### SUPERTONIN CONCLUIDO! ###')
         print()
-
-        
-        
-
-
