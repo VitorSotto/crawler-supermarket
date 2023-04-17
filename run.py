@@ -40,15 +40,15 @@ browser = webdriver.Chrome(service=service,options=options)
 
 # Busca dos produtos no Atacacão
 crawlerAtacadao = CrawlerAtacadao(searchProducts, browser)
-products.append(crawlerAtacadao.processa())
+crawlerAtacadao.processa(products)
 
 # Busca dos produtos no SuperTonin
 crawlerSuperTonin = CrawlerSuperTonin(searchProducts, browser)
-products.append(crawlerSuperTonin.processa())
+crawlerSuperTonin.processa(products)
 
 # Busca dos produtos no Savegnago
 crawlerSavegnago = CrawlerSavegnago(searchProducts, browser)
-products.append(crawlerSavegnago.processa())
+crawlerSavegnago.processa(products)
 
 browser.close()
 print('Busca concluida!')
