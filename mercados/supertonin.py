@@ -2,11 +2,13 @@ import numpy
 from time import sleep
 
 from selenium.webdriver.common.by import By
+from mercados.mercado import Mercado
+from datetime import datetime
 from bs4 import BeautifulSoup
 import pandas as pd
 from unidecode import unidecode
 
-from mercados.mercado import Mercado
+
 
 class CrawlerSuperTonin(Mercado):
         
@@ -30,18 +32,18 @@ class CrawlerSuperTonin(Mercado):
         
         print('configuração concluida!')
         print()
-        
-    def Getsearch(self):
+
+    def Getsearch(self,Product):
+
         print('fazendo a busca...')
-        url = "https://www.supertonin.com.br/busca?order=PD&q=" + self.searchProduct
+        url = "https://www.supertonin.com.br/busca?order=PD&q=" + str(Product)
         self.browser.get(url)
         print('busca feita!')
         print()
 
-    def Getprodutos(self):
-        
+    def Getprodutos(self,Product):
         print('carregando produtos...')
-        
+
         dataProducts = []
 
         # elemento ul trazendo a quantidade de li(s) que o elemento possui
@@ -50,7 +52,7 @@ class CrawlerSuperTonin(Mercado):
         
         while (page <= numpy.size(paginations)):
             # print(pages.text)
-            url_page = "https://www.supertonin.com.br/busca?order=PD&q=" + self.searchProduct + "&pg=" + str(page)
+            url_page = "https://www.supertonin.com.br/busca?order=PD&q=" + str(Product) + "&pg=" + str(page)
             # print(url_page)
             self.browser.get(url_page)
             sleep(10)
@@ -65,39 +67,53 @@ class CrawlerSuperTonin(Mercado):
 
                 product_name = products.select('div.title > a')[0].text
                 
-                if (product_name.lower().find(unidecode(self.searchProduct.lower())) == 0):
+                if (product_name.lower().find(unidecode(str(Product.lower()))) == 0):
 
-                    product_category = self.searchProduct
+                    product_category = Product
                     product_seller = products.find('div', attrs={'class': 'fabricante ng-binding'}).text
                     product_market = 'Tonin'
                     product_image = products.find('img', attrs={'class': 'produto-img lazy'})['src']
                     product_price = products.find('span', attrs={'class': 'ng-binding'}).text
                     product_price = float(product_price.replace('Por: R$', '').replace('De: R$ ', '').replace(',','.'))
+                    date_product = datetime.today()
+                    date = date_product.strftime('%d/%m/%Y')
                     
-                    dataProducts.append([product_name, product_category, product_seller, product_market, product_image, product_price])
+                    dataProducts.append([product_name, product_category, product_seller, product_market, product_image, product_price, date])
             page += 1
 
-        data = pd.DataFrame(dataProducts, columns=['Nome', 'Categoria', 'Fornecedor', 'Mercado', 'Imagem', 'Preco']).sort_values('Preco')
+        data = []
+        data = pd.DataFrame(dataProducts, columns=['Nome', 'Categoria', 'Fornecedor', 'Mercado', 'Imagem', 'Preco', 'Data']).sort_values('Preco')
         # print(data)
 
-        print(f'produtos encontrados: {numpy.size(dataProducts)}')
+
         print('carregamento concluido!')
         print()
         
-        return data
+        # array de todos os meus produtos buscados
 
-    def processa(self):
+        return data.iloc[0]
+    
+
+    def processa(self, data_products):
         print('### INCIANDO SUPERTONIN ###')
         print()
         
         self.Browsingsite()
         sleep(5)
-        self.Getsearch()
-        sleep(5)
-        data = self.Getprodutos()
+
+        for Product in self.searchProducts:
+            print(Product)
+            self.Getsearch(Product)
+            sleep(5)
+
+            data_products.append(self.Getprodutos(Product))
+
+        print(data_products)
         
         print('### SUPERTONIN CONCLUIDO! ###')
         print()
+
         
-        return data.iloc[0]
+        
+
 
