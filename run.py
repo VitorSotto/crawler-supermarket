@@ -30,7 +30,8 @@ arquivo_abs_caminho = abs_pasta + '/' + arquivo
 with open(arquivo_abs_caminho, 'r') as arq:
   searchProducts = arq.read().split(',')
 
-products = []
+products = pd.DataFrame(columns=['Id_Produto', 'Nome', 'Fornecedor', 'Mercado', 'Imagem', 'Id_Preco'])
+prices = pd.DataFrame(columns=['Id_Preco', 'Categoria', 'Preco', 'Data', 'Id_Produto'])
 
 print('=============================================================')
 print()
@@ -40,28 +41,33 @@ browser = webdriver.Chrome(service=service,options=options)
 
 # Busca dos produtos no Atacacão
 crawlerAtacadao = CrawlerAtacadao(searchProducts, browser)
-crawlerAtacadao.processa(products)
+crawlerAtacadaoRes = crawlerAtacadao.processa()
+
+products = pd.concat([products, crawlerAtacadaoRes[0]], ignore_index=True)
+prices = pd.concat([prices, crawlerAtacadaoRes[1]], ignore_index=True)
 
 # Busca dos produtos no SuperTonin
-crawlerSuperTonin = CrawlerSuperTonin(searchProducts, browser)
-crawlerSuperTonin.processa(products)
+# crawlerSuperTonin = CrawlerSuperTonin(searchProducts, browser)
+# crawlerSuperTonin.processa(products)
 
 # Busca dos produtos no Savegnago
-crawlerSavegnago = CrawlerSavegnago(searchProducts, browser)
-crawlerSavegnago.processa(products)
+# crawlerSavegnago = CrawlerSavegnago(searchProducts, browser)
+# crawlerSavegnago.processa(products)
 
 browser.close()
 print('Busca concluida!')
 print('=============================================================')
 sleep(1)
 
-data = pd.DataFrame(products, columns=['Nome', 'Categoria', 'Fornecedor', 'Mercado', 'Imagem', 'Preco'])
-
-print(data)
+print(products)
+print()
+print(prices)
+print()
 
 conn = sqlite3.connect('crawler.db')
 
-data.to_sql('produtos', conn, if_exists='replace', index=False)
+products.to_sql('produtos', conn, if_exists='replace', index=False)
+prices.to_sql('precos', conn, if_exists='replace', index=False)
 
 conn.commit()
 print('=============================================================')
