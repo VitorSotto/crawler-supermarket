@@ -1,5 +1,8 @@
 from time import sleep
 import numpy as np
+import uuid
+from datetime import date
+
 from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
@@ -60,6 +63,7 @@ class CrawlerSavegnago(Mercado):
     sleep(2)
   
   def LoadingSite(self):
+    print('carregamento produtos...')
    # loading = False
     wait = WebDriverWait(self.browser, 10)
     mostrar_mais = wait.until(EC.visibility_of_element_located((By.XPATH, "/html/body/div[2]/div/div[1]/div/div[3]/div/div/section/div[2]/div/div[3]/div/div[2]/div/div[5]/div/div/div/div/div/a/div[contains(text(), 'Mostrar mais')]")))
@@ -79,6 +83,8 @@ class CrawlerSavegnago(Mercado):
   
   def GetProducts(self, searchProduct):
 
+    print("coletando dados...")
+
     list_products = []
     sleep(2)
     page_content = self.browser.page_source
@@ -90,11 +96,13 @@ class CrawlerSavegnago(Mercado):
     products = site.find_all('div', attrs={'class':'vtex-search-result-3-x-galleryItem vtex-search-result-3-x-galleryItem--normal vtex-search-result-3-x-galleryItem--grid pa4'})
 
     for product in products:
+      product_id = str(uuid.uuid4())
+      price_id = str(uuid.uuid4())
       
       indisponivel = product.find('p', attrs={'class':'lh-copy vtex-rich-text-0-x-paragraph vtex-rich-text-0-x-paragraph--text-indisponivel'})
 
       name_prod = product.find('span', attrs={'class':'vtex-product-summary-2-x-productBrand vtex-product-summary-2-x-brandName t-body'}).text
-
+     
       category_prod = searchProduct   
       supplier_prod = ''
       market_prod = 'Savegnago'   
@@ -103,32 +111,44 @@ class CrawlerSavegnago(Mercado):
       if indisponivel is None:
         preco_prod = float(product.find('p', attrs={'class':'savegnagoio-store-theme-7-x-priceUnit'}).text.replace(u'\xa0', u' ').replace('R$ ', '').replace(',', '.'))
       img_prod = product.find('img', attrs={'class':'vtex-product-summary-2-x-imageNormal vtex-product-summary-2-x-image'})['src']
+      product_date = date.today()
 
-      list_products.append([name_prod, category_prod, supplier_prod, market_prod, img_prod, preco_prod])
+      list_products.append([product_id, price_id, name_prod, category_prod, supplier_prod, market_prod, img_prod, preco_prod, product_date])
 
       #print(f'produtos encontrados: {np.size(products)}')
       dataproducts = []
-      dataproducts = pd.DataFrame(list_products, columns=['Nome', 'Categoria', 'Fornecedor', 'Mercado', 'Imagem', 'Preco']).sort_values('Preco')
+      dataproducts = pd.DataFrame(list_products, columns=['Id_Produto','Id_Preco', 'Nome', 'Categoria', 'Fornecedor', 'Mercado', 'Imagem', 'Preco', 'Data']).sort_values('Preco')
    
       
     # df = dataproducts.sort_values('Preco')
-    
+    print("dados coletados!")
     print(dataproducts.iloc[0])
 
-    return dataproducts.iloc[0]
+    return pd.DataFrame(dataproducts.iloc[0]).transpose()
       
 
-  def processa(self, products):
+  def processa(self):
       print('### INCIANDO SAVEGNAGO ###')
       print()
 
+      print('configurando...')
+      
       self.browser.get("https://www.savegnago.com.br/")
       sleep(5)
 
       self.insertCEP()
       sleep(5)
 
+      products = pd.DataFrame(columns=['Id_Produto', 'Nome', 'Fornecedor', 'Mercado', 'Imagem', 'Id_Preco'])
+      prices = pd.DataFrame(columns=['Id_Preco', 'Categoria', 'Preco', 'Data', 'Id_Produto'])
+      res = []
+
+      print('configuração concluida!')
+      print('')
+
       for searchProduct in self.searchProducts:
+        print(f'Buscando por {searchProduct}...')
+
         self.Searching(searchProduct)
         sleep(10)
 
@@ -141,12 +161,21 @@ class CrawlerSavegnago(Mercado):
         self.LoadingSite()
         sleep(10)
 
-        products.append(self.GetProducts(searchProduct))
+        first_line = self.GetProducts(searchProduct)
+        
+        products = pd.concat([products, first_line], join='inner', ignore_index=True)
+        prices = pd.concat([prices, first_line], join='inner', ignore_index=True)
+
         sleep(10)
-        print("produtos carregados")
+        print("Busca Completa!")
       
       print('### SAVEGNAGO CONCLUIDO! ###')
       print()
+
+      res.append(products)
+      res.append(prices)
+      
+      return res
         
      
 
