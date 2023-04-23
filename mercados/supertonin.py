@@ -1,5 +1,6 @@
 import numpy
 from time import sleep
+import uuid
 
 from selenium.webdriver.common.by import By
 from mercados.mercado import Mercado
@@ -44,7 +45,7 @@ class CrawlerSuperTonin(Mercado):
     def Getprodutos(self,Product):
         print('carregando produtos...')
 
-        dataProducts = []
+        dataProduct = []
 
         # elemento ul trazendo a quantidade de li(s) que o elemento possui
         paginations = self.browser.find_elements(By.CSS_SELECTOR, 'ul.pagination > li')
@@ -68,7 +69,8 @@ class CrawlerSuperTonin(Mercado):
                 product_name = products.select('div.title > a')[0].text
                 
                 if (product_name.lower().find(unidecode(str(Product.lower()))) == 0):
-
+                    product_id = str(uuid.uuid4())
+                    price_id = str(uuid.uuid4())
                     product_category = Product
                     product_seller = products.find('div', attrs={'class': 'fabricante ng-binding'}).text
                     product_market = 'Tonin'
@@ -78,37 +80,50 @@ class CrawlerSuperTonin(Mercado):
                     date_product = datetime.today()
                     date = date_product.strftime('%d/%m/%Y')
                     
-                    dataProducts.append([product_name, product_category, product_seller, product_market, product_image, product_price, date])
+                    dataProduct.append([product_id, price_id, product_name, product_category, product_seller, product_market, product_image, product_price, date])
             page += 1
 
         data = []
-        data = pd.DataFrame(dataProducts, columns=['Nome', 'Categoria', 'Fornecedor', 'Mercado', 'Imagem', 'Preco', 'Data']).sort_values('Preco')
+        data = pd.DataFrame(dataProduct, columns=['Id_Produto', 'Id_Preco','Nome', 'Categoria', 'Fornecedor', 'Mercado', 'Imagem', 'Preco', 'Data']).sort_values('Preco')
         # print(data)
-
+        
 
         print('carregamento concluido!')
         print()
         
         # array de todos os meus produtos buscados
-
-        return data.iloc[0]
+        return pd.DataFrame(data.iloc[0]).transpose()
     
 
-    def processa(self, data_products):
+    def processa(self):
         print('### INCIANDO SUPERTONIN ###')
         print()
         
         self.Browsingsite()
         sleep(5)
 
+        # DataFrame para tabela de produtos
+        products = pd.DataFrame(columns=['Id_Produto', 'Nome', 'Fornecedor', 'Mercado', 'Imagem', 'Id_Preco'])
+        # DataFrame para tabela de preços
+        prices = pd.DataFrame(columns=['Id_Preco', 'Categoria', 'Preco', 'Data', 'Id_Produto'])
+        res = []
+    
         for Product in self.searchProducts:
             print(Product)
             self.Getsearch(Product)
             sleep(5)
 
-            data_products.append(self.Getprodutos(Product))
+            first_line = (self.Getprodutos(Product))
+            products = pd.concat([products, first_line], join='inner', ignore_index=True)
+            prices = pd.concat([prices, first_line], join='inner', ignore_index=True)
 
-        print(data_products)
-        
+        print('Busca completa!')
+        print()
+
         print('### SUPERTONIN CONCLUIDO! ###')
         print()
+
+        res.append(products)
+        res.append(prices)
+        
+        return res
