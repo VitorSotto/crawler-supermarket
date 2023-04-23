@@ -6,25 +6,25 @@ cursor = conn.cursor()
 
 # criando a tabela (schema)
 
-# Cria a tabela "produtos"
-conn.execute('''CREATE TABLE produtos (
-        id_produto TEXT NOT NULL PRIMARY KEY,
-        nome TEXT NOT NULL,
-        fornecedor TEXT,
-        mercado TEXT NOT NULL,
-        imagem TEXT NOT NULL,
-        id_preco TEXT NOT NULL UNIQUE,
-        FOREIGN KEY (id_preco) REFERENCES precos(id_preco)
+# Cria a tabela "products"
+conn.execute('''CREATE TABLE Products (
+        id TEXT NOT NULL PRIMARY KEY,
+        name TEXT NOT NULL,
+        supplier TEXT,
+        market TEXT NOT NULL,
+        image TEXT NOT NULL,
+        priceId TEXT NOT NULL UNIQUE,
+        FOREIGN KEY (priceID) REFERENCES precos(id)
 )''')
 
-# Cria a tabela "precos"
-conn.execute('''CREATE TABLE precos (
+# Cria a tabela "prices"
+conn.execute('''CREATE TABLE Prices (
         id TEXT NOT NULL PRIMARY KEY,
-        categoria TEXT NOT NULL,
-        preco DECIMAL NOT NULL,
-        data DATE NOT NULL,
-        id_produto TEXT NOT NULL,
-        FOREIGN KEY (id_produto) REFERENCES produtos(id_produto)
+        category TEXT NOT NULL,
+        price DECIMAL NOT NULL,
+        updatedAt DATE NOT NULL,
+        productId TEXT NOT NULL,
+        FOREIGN KEY (productID) REFERENCES produtos(id)
 )''')
 
 print('Tabela criada com sucesso.')

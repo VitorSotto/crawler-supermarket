@@ -1,1 +1,1 @@
-Arroz,Feijão,Açúcar,Café,Óleo,Macarrão,Detergente,Farinha,Sal Refinado,Leite Integral,Biscoito
+Arroz,Feijão,Açúcar,Café,Óleo,Macarrão,Detergente,Farinha,Sal,Leite,Biscoito

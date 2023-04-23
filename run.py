@@ -47,12 +47,18 @@ products = pd.concat([products, crawlerAtacadaoRes[0]], ignore_index=True)
 prices = pd.concat([prices, crawlerAtacadaoRes[1]], ignore_index=True)
 
 # Busca dos produtos no SuperTonin
-# crawlerSuperTonin = CrawlerSuperTonin(searchProducts, browser)
-# crawlerSuperTonin.processa(products)
+crawlerSuperTonin = CrawlerSuperTonin(searchProducts, browser)
+crawlerSuperToninRes = crawlerSuperTonin.processa()
+
+products = pd.concat([products, crawlerSuperToninRes[0]], ignore_index=True)
+prices = pd.concat([prices, crawlerSuperToninRes[1]], ignore_index=True)
 
 # Busca dos produtos no Savegnago
-# crawlerSavegnago = CrawlerSavegnago(searchProducts, browser)
-# crawlerSavegnago.processa(products)
+crawlerSavegnago = CrawlerSavegnago(searchProducts, browser)
+crawlerSavegnagoRes = crawlerSavegnago.processa()
+
+products = pd.concat([products, crawlerSavegnagoRes[0]], ignore_index=True)
+prices = pd.concat([prices, crawlerSavegnagoRes[1]], ignore_index=True)
 
 browser.close()
 print('Busca concluida!')
@@ -64,10 +70,14 @@ print()
 print(prices)
 print()
 
-conn = sqlite3.connect('crawler.db')
+conn = sqlite3.connect(f"{homedir}/www/EconomizeJa/backend/prisma/dev.db")
+cursor = conn.cursor()
 
-products.to_sql('produtos', conn, if_exists='replace', index=False)
-prices.to_sql('precos', conn, if_exists='replace', index=False)
+# products.to_sql('products', conn, if_exists='append', index=False)
+cursor.executemany('INSERT INTO Products (id, name, supplier, market, image, priceId) VALUES (?, ?, ?, ?, ?, ?)', products.to_numpy())
+
+# prices.to_sql('prices', conn, if_exists='append', index=False)
+cursor.executemany('INSERT INTO Prices (id, category, price, updatedAt, productId) VALUES (?, ?, ?, ?, ?)', prices.to_numpy())
 
 conn.commit()
 print('=============================================================')

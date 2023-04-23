@@ -17,9 +17,10 @@ class CrawlerAtacadao(Mercado):
       cancelButton.click()
 
     def selectCEP(self):
+      sleep(2)
       cpfSelect = self.browser.find_element(By.ID, 'input-cpf-modal')
       ActionChains(self.browser).click(cpfSelect).perform()
-      
+      sleep(1)
       inputCEP = self.browser.find_element(By.ID, 'cep')
       inputCEP.send_keys('14801-600')
       sleep(1)

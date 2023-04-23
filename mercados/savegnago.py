@@ -122,7 +122,7 @@ class CrawlerSavegnago(Mercado):
       
     # df = dataproducts.sort_values('Preco')
     print("dados coletados!")
-    print(dataproducts.iloc[0])
+    # print(dataproducts.iloc[0])
 
     return pd.DataFrame(dataproducts.iloc[0]).transpose()
       

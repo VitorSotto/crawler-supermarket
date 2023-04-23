@@ -4,7 +4,7 @@ import uuid
 
 from selenium.webdriver.common.by import By
 from mercados.mercado import Mercado
-from datetime import datetime
+from datetime import date
 from bs4 import BeautifulSoup
 import pandas as pd
 from unidecode import unidecode
@@ -77,10 +77,10 @@ class CrawlerSuperTonin(Mercado):
                     product_image = products.find('img', attrs={'class': 'produto-img lazy'})['src']
                     product_price = products.find('span', attrs={'class': 'ng-binding'}).text
                     product_price = float(product_price.replace('Por: R$', '').replace('De: R$ ', '').replace(',','.'))
-                    date_product = datetime.today()
-                    date = date_product.strftime('%d/%m/%Y')
+                    date_product = date.today()
+                    # date = date_product.strftime('%d/%m/%Y')
                     
-                    dataProduct.append([product_id, price_id, product_name, product_category, product_seller, product_market, product_image, product_price, date])
+                    dataProduct.append([product_id, price_id, product_name, product_category, product_seller, product_market, product_image, product_price, date_product])
             page += 1
 
         data = []
