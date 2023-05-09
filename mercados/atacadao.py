@@ -32,12 +32,12 @@ class CrawlerAtacadao(Mercado):
        coockieButton = self.browser.find_element(By.ID, 'onetrust-accept-btn-handler')
        coockieButton.click()
 
-    def search(self, searchProduct):
+    def search(self):
       searchButton = self.browser.find_element(By.CLASS_NAME, 'js-search-query')
-      searchButton.send_keys(searchProduct)
+      searchButton.send_keys(self.searchProduct)
       searchButton.submit()
 
-    def filterCategory(self, searchProduct):
+    def filterCategory(self):
       print('filtrando...')
       print()
 
@@ -49,7 +49,7 @@ class CrawlerAtacadao(Mercado):
       inputsProducts = filterProducts.find_elements(By.TAG_NAME, 'input')
 
       for inputProduct in inputsProducts:
-        if (inputProduct.get_attribute('value').lower().find(searchProduct.lower())==0):
+        if (inputProduct.get_attribute('value').lower().find(self.searchProduct.lower())==0):
           ActionChains(self.browser).scroll_to_element(inputProduct).perform()
           ActionChains(self.browser).click(inputProduct).perform()
       
@@ -90,7 +90,7 @@ class CrawlerAtacadao(Mercado):
       for product in products:
         ActionChains(self.browser).scroll_to_element(product).perform()
 
-    def getProduct(self, searchProduct):
+    def getProduct(self):
       
       print("pegando os produtos...")
       print()
@@ -103,7 +103,7 @@ class CrawlerAtacadao(Mercado):
         product_id = str(uuid.uuid4())
         price_id = str(uuid.uuid4())
         product_name = product.find('h2',attrs={'class':'product-box__name'}).text
-        product_category = searchProduct
+        product_category = self.searchProduct
         product_img = product.find('img')['src']
         product_supplier = product.find('span',attrs={'class':'js-product-box__supplier'}).text
         product_mercado = 'Atacadão'
@@ -142,33 +142,28 @@ class CrawlerAtacadao(Mercado):
       products = pd.DataFrame(columns=['Id_Produto', 'Nome', 'Fornecedor', 'Mercado', 'Imagem', 'Id_Preco'])
       prices = pd.DataFrame(columns=['Id_Preco', 'Categoria', 'Preco', 'Data', 'Id_Produto'])
       res = []
+
+      self.browser.get('https://www.atacadao.com.br/')
+
+      self.search()
+
+      sleep(5)
+
+      self.filterCategory()
+
+      sleep(10)
+
+      self.loading()
+
+      sleep(5)
+
+      first_line = self.getProduct()
       
-      for searchProduct in self.searchProducts:
-
-        self.browser.get('https://www.atacadao.com.br/')
-        
-        print(f'Buscando por {searchProduct}...')
-        print()
-
-        self.search(searchProduct)
-
-        sleep(5)
-
-        self.filterCategory(searchProduct)
-
-        sleep(10)
-
-        self.loading()
-
-        sleep(5)
-
-        first_line = self.getProduct(searchProduct)
-        
-        products = pd.concat([products, first_line], join='inner', ignore_index=True)
-        prices = pd.concat([prices, first_line], join='inner', ignore_index=True)
-        
-        print('Busca completa!')
-        print()
+      products = pd.concat([products, first_line], join='inner', ignore_index=True)
+      prices = pd.concat([prices, first_line], join='inner', ignore_index=True)
+      
+      print('Busca completa!')
+      print()
       
       print('### ATACADAO CONCLUIDO! ###')
       print()

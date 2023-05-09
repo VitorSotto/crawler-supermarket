@@ -6,7 +6,7 @@ from datetime import date
 from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.common.exceptions import TimeoutException, NoSuchElementException
+from selenium.common.exceptions import StaleElementReferenceException, NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -20,31 +20,31 @@ class CrawlerSavegnago(Mercado):
   
 
   def insertCEP(self):
-      button_cep = self.browser.find_element(By.XPATH, '/html/body/div[2]/div/div[1]/div/div[2]/div/div[1]/section/div/div[2]/div/div/div[1]/div')
+      button_cep = self.browser.find_element(By.CSS_SELECTOR, 'body > div.render-container.render-route-store-home > div > div.vtex-store__template.bg-base > div > div.vtex-sticky-layout-0-x-wrapper.vtex-sticky-layout-0-x-wrapper--top-menu-sticky-desktop > div > div.vtex-flex-layout-0-x-flexRow.vtex-flex-layout-0-x-flexRow--top-menu-wrapper-desktop > section > div > div:nth-child(2) > div > div > div.savegnagoio-app-regionalization-0-x-widgetWrapper.regionalization-widget > div > div > p')
       button_cep.click()
       sleep(1)
 
-      button_cep2 = self.browser.find_element(By.XPATH, '/html/body/div[2]/div/div[1]/div/div[2]/div/div[1]/section/div/div[2]/div/div/div[2]/div/div[2]/button[1]')
+      button_cep2 = self.browser.find_element(By.CSS_SELECTOR, 'body > div.render-container.render-route-store-home > div > div.vtex-store__template.bg-base > div > div.vtex-sticky-layout-0-x-wrapper.vtex-sticky-layout-0-x-wrapper--top-menu-sticky-desktop > div > div.vtex-flex-layout-0-x-flexRow.vtex-flex-layout-0-x-flexRow--top-menu-wrapper-desktop > section > div > div:nth-child(2) > div > div > div.savegnagoio-app-regionalization-0-x-modalManagerWrapper.savegnagoio-app-regionalization-0-x-modalManagerWrapperOpened > div > div.savegnagoio-app-regionalization-0-x-modalDeliverySelectorSelectDeliverContainer > button')
       button_cep2.click()
       sleep(1)
 
-      insert_cep = self.browser.find_element(By.XPATH, '/html/body/div[2]/div/div[1]/div/div[2]/div/div[1]/section/div/div[2]/div/div/div[2]/div/form/input')
+      insert_cep = self.browser.find_element(By.CSS_SELECTOR, 'body > div.render-container.render-route-store-home > div > div.vtex-store__template.bg-base > div > div.vtex-sticky-layout-0-x-wrapper.vtex-sticky-layout-0-x-wrapper--top-menu-sticky-desktop > div > div.vtex-flex-layout-0-x-flexRow.vtex-flex-layout-0-x-flexRow--top-menu-wrapper-desktop > section > div > div:nth-child(2) > div > div > div.savegnagoio-app-regionalization-0-x-modalManagerWrapper.savegnagoio-app-regionalization-0-x-modalManagerWrapperOpened > div > form > input')
       insert_cep.send_keys("14801-600")
       sleep(2)
 
 
-      b_insertcep = self.browser.find_element(By.XPATH, '/html/body/div[2]/div/div[1]/div/div[2]/div/div[1]/section/div/div[2]/div/div/div[2]/div/form/button')
+      b_insertcep = self.browser.find_element(By.CSS_SELECTOR, 'body > div.render-container.render-route-store-home > div > div.vtex-store__template.bg-base > div > div.vtex-sticky-layout-0-x-wrapper.vtex-sticky-layout-0-x-wrapper--top-menu-sticky-desktop > div > div.vtex-flex-layout-0-x-flexRow.vtex-flex-layout-0-x-flexRow--top-menu-wrapper-desktop > section > div > div:nth-child(2) > div > div > div.savegnagoio-app-regionalization-0-x-modalManagerWrapper.savegnagoio-app-regionalization-0-x-modalManagerWrapperOpened > div > form > button')
       b_insertcep.click()
       sleep(3)
 
-  def Searching(self, searchProduct):
+  def Searching(self):
     url_base =  "https://www.savegnago.com.br/" 
-    url_svng = (url_base + searchProduct)
+    url_svng = (url_base + self.searchProduct)
     self.browser.get(url_svng)
 
-  def FilterProducts(self, searchProduct):
+  def FilterProducts(self):
     try:
-      input_filter = self.browser.find_element(By.CSS_SELECTOR, f'input[value="{searchProduct}"]')
+      input_filter = self.browser.find_element(By.CSS_SELECTOR, f'input[value="{self.searchProduct}"]')
       ActionChains(self.browser).scroll_to_element(input_filter).perform()
       sleep(0.5)
       ActionChains(self.browser).click(input_filter).perform()
@@ -66,7 +66,7 @@ class CrawlerSavegnago(Mercado):
     print('carregamento produtos...')
    # loading = False
     wait = WebDriverWait(self.browser, 10)
-    mostrar_mais = wait.until(EC.visibility_of_element_located((By.XPATH, "/html/body/div[2]/div/div[1]/div/div[3]/div/div/section/div[2]/div/div[3]/div/div[2]/div/div[5]/div/div/div/div/div/a/div[contains(text(), 'Mostrar mais')]")))
+    mostrar_mais = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "body > div.render-container.render-route-store-search > div > div.vtex-store__template.bg-base > div > div:nth-child(4) > div > div > section > div.relative.justify-center.flex > div > div.vtex-flex-layout-0-x-flexRow.vtex-flex-layout-0-x-flexRow--container__search-result-desktop > div > div.pr0.items-stretch.flex-grow-1.flex > div > div:nth-child(5) > div > div > div > div > div > a")))
     
     while mostrar_mais.is_displayed():
       try: 
@@ -74,14 +74,15 @@ class CrawlerSavegnago(Mercado):
         sleep(3)
         ActionChains(self.browser).click(mostrar_mais).perform()
         #mostrar_mais.click()
-        mostrar_mais = wait.until(EC.visibility_of_element_located((By.XPATH, "/html/body/div[2]/div/div[1]/div/div[3]/div/div/section/div[2]/div/div[3]/div/div[2]/div/div[5]/div/div/div/div/div/a/div[contains(text(), 'Mostrar mais')]")))
+        mostrar_mais = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "body > div.render-container.render-route-store-search > div > div.vtex-store__template.bg-base > div > div:nth-child(4) > div > div > section > div.relative.justify-center.flex > div > div.vtex-flex-layout-0-x-flexRow.vtex-flex-layout-0-x-flexRow--container__search-result-desktop > div > div.pr0.items-stretch.flex-grow-1.flex > div > div:nth-child(5) > div > div > div > div > div > a")))
 
-      except TimeoutException:
+      except StaleElementReferenceException:
         print('carregamento concluido!')
+        print()
         break
         
   
-  def GetProducts(self, searchProduct):
+  def GetProducts(self):
 
     print("coletando dados...")
 
@@ -103,13 +104,13 @@ class CrawlerSavegnago(Mercado):
 
       name_prod = product.find('span', attrs={'class':'vtex-product-summary-2-x-productBrand vtex-product-summary-2-x-brandName t-body'}).text
      
-      category_prod = searchProduct   
+      category_prod = self.searchProduct
       supplier_prod = ''
       market_prod = 'Savegnago'   
 
       #preco_prod = float(unicodedata.normalize('NFKD', product.find('p', attrs={'class':'savegnagoio-store-theme-6-x-priceUnit'}).text).replace('R$ ', '').replace(',', '.'))
       if indisponivel is None:
-        preco_prod = float(product.find('p', attrs={'class':'savegnagoio-store-theme-7-x-priceUnit'}).text.replace(u'\xa0', u' ').replace('R$ ', '').replace(',', '.'))
+        preco_prod = float(product.find('p', attrs={'class':'savegnagoio-store-theme-8-x-priceUnit'}).text.replace(u'\xa0', u' ').replace('R$ ', '').replace(',', '.'))
       img_prod = product.find('img', attrs={'class':'vtex-product-summary-2-x-imageNormal vtex-product-summary-2-x-image'})['src']
       product_date = date.today()
 
@@ -122,12 +123,14 @@ class CrawlerSavegnago(Mercado):
       
     # df = dataproducts.sort_values('Preco')
     print("dados coletados!")
+    print()
     # print(dataproducts.iloc[0])
 
     return pd.DataFrame(dataproducts.iloc[0]).transpose()
       
 
   def processa(self):
+    
       print('### INCIANDO SAVEGNAGO ###')
       print()
 
@@ -139,35 +142,32 @@ class CrawlerSavegnago(Mercado):
       self.insertCEP()
       sleep(5)
 
+      print('configuração concluida!')
+      print()
+      
       products = pd.DataFrame(columns=['Id_Produto', 'Nome', 'Fornecedor', 'Mercado', 'Imagem', 'Id_Preco'])
       prices = pd.DataFrame(columns=['Id_Preco', 'Categoria', 'Preco', 'Data', 'Id_Produto'])
       res = []
+      
+      self.Searching()
+      sleep(10)
 
-      print('configuração concluida!')
-      print('')
+      # self.OrderByPrice()
+      # sleep(5)
 
-      for searchProduct in self.searchProducts:
-        print(f'Buscando por {searchProduct}...')
+      self.FilterProducts()
+      sleep(5)
+      
+      self.LoadingSite()
+      sleep(10)
 
-        self.Searching(searchProduct)
-        sleep(10)
+      first_line = self.GetProducts()
+      
+      products = pd.concat([products, first_line], join='inner', ignore_index=True)
+      prices = pd.concat([prices, first_line], join='inner', ignore_index=True)
 
-        self.OrderByPrice()
-        sleep(5)
-
-        self.FilterProducts(searchProduct)
-        sleep(5)
-        
-        self.LoadingSite()
-        sleep(10)
-
-        first_line = self.GetProducts(searchProduct)
-        
-        products = pd.concat([products, first_line], join='inner', ignore_index=True)
-        prices = pd.concat([prices, first_line], join='inner', ignore_index=True)
-
-        sleep(10)
-        print("Busca Completa!")
+      sleep(10)
+      print("Busca Completa!")
       
       print('### SAVEGNAGO CONCLUIDO! ###')
       print()

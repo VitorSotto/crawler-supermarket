@@ -34,15 +34,15 @@ class CrawlerSuperTonin(Mercado):
         print('configuração concluida!')
         print()
 
-    def Getsearch(self,Product):
+    def Getsearch(self):
 
         print('fazendo a busca...')
-        url = "https://www.supertonin.com.br/busca?order=PD&q=" + str(Product)
+        url = "https://www.supertonin.com.br/busca?order=PD&q=" + str(self.searchProduct)
         self.browser.get(url)
         print('busca feita!')
         print()
 
-    def Getprodutos(self,Product):
+    def Getprodutos(self):
         print('carregando produtos...')
 
         dataProduct = []
@@ -53,7 +53,7 @@ class CrawlerSuperTonin(Mercado):
         
         while (page <= numpy.size(paginations)):
             # print(pages.text)
-            url_page = "https://www.supertonin.com.br/busca?order=PD&q=" + str(Product) + "&pg=" + str(page)
+            url_page = "https://www.supertonin.com.br/busca?order=PD&q=" + str(self.searchProduct) + "&pg=" + str(page)
             # print(url_page)
             self.browser.get(url_page)
             sleep(10)
@@ -68,10 +68,10 @@ class CrawlerSuperTonin(Mercado):
 
                 product_name = products.select('div.title > a')[0].text
                 
-                if (product_name.lower().find(unidecode(str(Product.lower()))) == 0):
+                if (product_name.lower().find(unidecode(str(self.searchProduct.lower()))) == 0):
                     product_id = str(uuid.uuid4())
                     price_id = str(uuid.uuid4())
-                    product_category = Product
+                    product_category = self.searchProduct
                     product_seller = products.find('div', attrs={'class': 'fabricante ng-binding'}).text
                     product_market = 'Tonin'
                     product_image = products.find('img', attrs={'class': 'produto-img lazy'})['src']
@@ -96,6 +96,7 @@ class CrawlerSuperTonin(Mercado):
     
 
     def processa(self):
+        
         print('### INCIANDO SUPERTONIN ###')
         print()
         
@@ -107,15 +108,13 @@ class CrawlerSuperTonin(Mercado):
         # DataFrame para tabela de preços
         prices = pd.DataFrame(columns=['Id_Preco', 'Categoria', 'Preco', 'Data', 'Id_Produto'])
         res = []
-    
-        for Product in self.searchProducts:
-            print(Product)
-            self.Getsearch(Product)
-            sleep(5)
 
-            first_line = (self.Getprodutos(Product))
-            products = pd.concat([products, first_line], join='inner', ignore_index=True)
-            prices = pd.concat([prices, first_line], join='inner', ignore_index=True)
+        self.Getsearch()
+        sleep(5)
+
+        first_line = (self.Getprodutos())
+        products = pd.concat([products, first_line], join='inner', ignore_index=True)
+        prices = pd.concat([prices, first_line], join='inner', ignore_index=True)
 
         print('Busca completa!')
         print()

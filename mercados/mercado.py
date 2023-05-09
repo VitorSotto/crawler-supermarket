@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 
 class Mercado(ABC):
-  def __init__(self, searchProducts, browser):
-    self.searchProducts = searchProducts
+  def __init__(self, searchProduct, browser):
+    self.searchProduct = searchProduct
     self.browser = browser
     
   
