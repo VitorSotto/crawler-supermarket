@@ -44,7 +44,7 @@ class CrawlerSavegnago(Mercado):
 
   def FilterProducts(self):
     try:
-      input_filter = self.browser.find_element(By.CSS_SELECTOR, f'input[value="{self.searchProduct}"]')
+      input_filter = self.browser.find_element(By.CSS_SELECTOR, f'input[value^="{self.searchProduct}"]')
       ActionChains(self.browser).scroll_to_element(input_filter).perform()
       sleep(0.5)
       ActionChains(self.browser).click(input_filter).perform()
@@ -71,7 +71,7 @@ class CrawlerSavegnago(Mercado):
     while mostrar_mais.is_displayed():
       try: 
         ActionChains(self.browser).scroll_to_element(mostrar_mais).perform()
-        sleep(3)
+        sleep(5)
         ActionChains(self.browser).click(mostrar_mais).perform()
         #mostrar_mais.click()
         mostrar_mais = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "body > div.render-container.render-route-store-search > div > div.vtex-store__template.bg-base > div > div:nth-child(4) > div > div > section > div.relative.justify-center.flex > div > div.vtex-flex-layout-0-x-flexRow.vtex-flex-layout-0-x-flexRow--container__search-result-desktop > div > div.pr0.items-stretch.flex-grow-1.flex > div > div:nth-child(5) > div > div > div > div > div > a")))
@@ -102,29 +102,41 @@ class CrawlerSavegnago(Mercado):
       
       indisponivel = product.find('p', attrs={'class':'lh-copy vtex-rich-text-0-x-paragraph vtex-rich-text-0-x-paragraph--text-indisponivel'})
 
+      if indisponivel is not None:
+        continue
+      #bt_comprar = product.find('div', attrs={'class':'vtex-button__label flex items-center justify-center h-100 ph6'})
+      
+    
       name_prod = product.find('span', attrs={'class':'vtex-product-summary-2-x-productBrand vtex-product-summary-2-x-brandName t-body'}).text
-     
+    
       category_prod = self.searchProduct
       supplier_prod = ''
       market_prod = 'Savegnago'   
 
       #preco_prod = float(unicodedata.normalize('NFKD', product.find('p', attrs={'class':'savegnagoio-store-theme-6-x-priceUnit'}).text).replace('R$ ', '').replace(',', '.'))
-      if indisponivel is None:
-        preco_prod = float(product.find('p', attrs={'class':'savegnagoio-store-theme-8-x-priceUnit'}).text.replace(u'\xa0', u' ').replace('R$ ', '').replace(',', '.'))
+      #if bt_comprar != None:
+      
+
+      preco_prod = float((product.find('p', attrs={'class':'savegnagoio-store-theme-8-x-priceUnit'}).text.replace('R$','').replace(',', '.')))
+
+      
       img_prod = product.find('img', attrs={'class':'vtex-product-summary-2-x-imageNormal vtex-product-summary-2-x-image'})['src']
+
       product_date = date.today()
+    
 
       list_products.append([product_id, price_id, name_prod, category_prod, supplier_prod, market_prod, img_prod, preco_prod, product_date])
+      
 
-      #print(f'produtos encontrados: {np.size(products)}')
-      dataproducts = []
-      dataproducts = pd.DataFrame(list_products, columns=['Id_Produto','Id_Preco', 'Nome', 'Categoria', 'Fornecedor', 'Mercado', 'Imagem', 'Preco', 'Data']).sort_values('Preco')
-   
+    #print(f'produtos encontrados: {np.size(products)}')
+    dataproducts = []
+    dataproducts = pd.DataFrame(list_products, columns=['Id_Produto','Id_Preco', 'Nome', 'Categoria', 'Fornecedor', 'Mercado', 'Imagem', 'Preco', 'Data']).sort_values('Preco')
+    
       
     # df = dataproducts.sort_values('Preco')
     print("dados coletados!")
     print()
-    # print(dataproducts.iloc[0])
+    print(dataproducts.iloc[0])
 
     return pd.DataFrame(dataproducts.iloc[0]).transpose()
       
