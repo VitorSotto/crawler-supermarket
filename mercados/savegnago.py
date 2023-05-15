@@ -118,9 +118,14 @@ class CrawlerSavegnago(Mercado):
       
 
       preco_prod = float((product.find('p', attrs={'class':'savegnagoio-store-theme-8-x-priceUnit'}).text.replace('R$','').replace(',', '.')))
-
       
-      img_prod = product.find('img', attrs={'class':'vtex-product-summary-2-x-imageNormal vtex-product-summary-2-x-image'})['src']
+      img_prod = ''
+      img_container = product.find('div', attrs={'class':'vtex-product-summary-2-x-imageContainer'})
+
+      if img_container.find('img') :
+        img_prod = img_container.find('img')['src']
+      else:
+        continue
 
       product_date = date.today()
     
@@ -136,7 +141,7 @@ class CrawlerSavegnago(Mercado):
     # df = dataproducts.sort_values('Preco')
     print("dados coletados!")
     print()
-    print(dataproducts.iloc[0])
+    # print(dataproducts.iloc[0])
 
     return pd.DataFrame(dataproducts.iloc[0]).transpose()
       
