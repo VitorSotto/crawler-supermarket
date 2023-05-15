@@ -21,6 +21,16 @@ Certifique-se de ter as seguintes dependências instaladas:
 - Bibliotecas: Selenium, BeautifulSoup, pandas, unidecode
 - Webdriver para o Selenium (por exemplo, ChromeDriver para o Google Chrome)
 
+## Executando o Crawler
+
+Para executar o crawler, abra um terminal e navegue até o diretório onde o arquivo `run.py` está localizado. Em seguida, execute o seguinte comando:
+
+```bash
+python3 run.py search.txt
+```
+
+O crawler irá percorrer cada um dos sites (Atacadão, SuperTonin e Savegnago), buscar os produtos na lista e exibir os resultados no console.
+
 ## Estrutura do Código
 
 O código-fonte do crawler segue uma abordagem orientada a objetos (POO), com as seguintes classes:
