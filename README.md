@@ -2,6 +2,8 @@
 
 Este é um crawler desenvolvido em Python que busca uma lista pré-definida de produtos em três sites distintos: Atacadão, SuperTonin e Savegnago. Os produtos são passados através de um arquivo de texto (txt) na linha de comando.
 
+Esse sistema foi feito para um outro projeto chamado: [EconomizeJa-backend](https://github.com/VitorSotto/EconomizeJa-backend) e [EconomizeJa-frontend](https://github.com/VitorSotto/EconomizeJa-frontend) (o frontend ainda não foi criado)
+
 O crawler utiliza as seguintes bibliotecas Python:
 
 - Selenium: utilizada para interagir com os sites, realizar buscas e extrair informações.
@@ -23,9 +25,8 @@ Certifique-se de ter as seguintes dependências instaladas:
 
 O código-fonte do crawler segue uma abordagem orientada a objetos (POO), com as seguintes classes:
 
-- `Crawler`: classe principal que coordena todo o processo de busca e extração de dados. Ela é responsável por iniciar o Selenium, ler o arquivo de produtos, realizar as buscas nos sites e armazenar os resultados no banco de dados.
-- `Site`: classe base abstrata que representa um site. Possui métodos para realizar a busca de produtos e extrair informações dos resultados.
-- `Atacadao`, `SuperTonin` e `Savegnago`: classes derivadas de `Site` que implementam a busca e extração de dados específicos para cada site.
+- `mercado`: classe base abstrata que representa um site. Possui métodos para realizar a busca de produtos e extrair informações dos resultados.
+- `atacadao`, `supertonin` e `savegnago`: classes derivadas de `mercado` que implementam a busca e extração de dados específicos para cada site.
 
 ## Contribuição
 
