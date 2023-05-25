@@ -92,7 +92,8 @@ class CrawlerSuperTonin(Mercado):
         print()
         
         # array de todos os meus produtos buscados
-        return pd.DataFrame(data.iloc[0]).transpose()
+        # return pd.DataFrame(data.iloc[0]).transpose()
+        return data
     
 
     def processa(self):

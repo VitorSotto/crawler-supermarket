@@ -143,7 +143,8 @@ class CrawlerSavegnago(Mercado):
     print()
     # print(dataproducts.iloc[0])
 
-    return pd.DataFrame(dataproducts.iloc[0]).transpose()
+    # return pd.DataFrame(dataproducts.iloc[0]).transpose()
+    return dataproducts
       
 
   def processa(self):

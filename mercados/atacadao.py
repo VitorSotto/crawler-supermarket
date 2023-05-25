@@ -118,7 +118,8 @@ class CrawlerAtacadao(Mercado):
       print('produtos pegos!')
       print()
       
-      return pd.DataFrame(data.iloc[0]).transpose()
+      # return pd.DataFrame(data.iloc[0]).transpose()
+      return data
 
     def processa(self):
       print('### INCIANDO ATACADAO ###')
