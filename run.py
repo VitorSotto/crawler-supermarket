@@ -78,7 +78,7 @@ print()
 print(prices)
 print()
 
-conn = sqlite3.connect(f"{homedir}/www/EconomizeJa/backend/prisma/dev.db")
+conn = sqlite3.connect("../server/prisma/dev.db")
 cursor = conn.cursor()
 
 # products.to_sql('products', conn, if_exists='append', index=False)

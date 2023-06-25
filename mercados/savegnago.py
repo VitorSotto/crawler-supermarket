@@ -20,20 +20,20 @@ class CrawlerSavegnago(Mercado):
   
 
   def insertCEP(self):
-      button_cep = self.browser.find_element(By.CSS_SELECTOR, 'body > div.render-container.render-route-store-home > div > div.vtex-store__template.bg-base > div > div.vtex-sticky-layout-0-x-wrapper.vtex-sticky-layout-0-x-wrapper--top-menu-sticky-desktop > div > div.vtex-flex-layout-0-x-flexRow.vtex-flex-layout-0-x-flexRow--top-menu-wrapper-desktop > section > div > div:nth-child(2) > div > div > div.savegnagoio-app-regionalization-0-x-widgetWrapper.regionalization-widget > div > div > p')
+      button_cep = self.browser.find_element(By.CSS_SELECTOR, 'body > div.render-container.render-route-store-home > div > div.vtex-store__template.bg-base > div > div.vtex-sticky-layout-0-x-wrapper.vtex-sticky-layout-0-x-wrapper--top-menu-sticky-desktop > div > div.vtex-flex-layout-0-x-flexRow.vtex-flex-layout-0-x-flexRow--top-menu-wrapper-desktop > section > div > div:nth-child(2) > div > div > div > div > p > button')
       button_cep.click()
       sleep(1)
 
-      button_cep2 = self.browser.find_element(By.CSS_SELECTOR, 'body > div.render-container.render-route-store-home > div > div.vtex-store__template.bg-base > div > div.vtex-sticky-layout-0-x-wrapper.vtex-sticky-layout-0-x-wrapper--top-menu-sticky-desktop > div > div.vtex-flex-layout-0-x-flexRow.vtex-flex-layout-0-x-flexRow--top-menu-wrapper-desktop > section > div > div:nth-child(2) > div > div > div.savegnagoio-app-regionalization-0-x-modalManagerWrapper.savegnagoio-app-regionalization-0-x-modalManagerWrapperOpened > div > div.savegnagoio-app-regionalization-0-x-modalDeliverySelectorSelectDeliverContainer > button')
+      button_cep2 = self.browser.find_element(By.CSS_SELECTOR, 'body > div.render-container.render-route-store-home > div > div.vtex-store__template.bg-base > div > div.vtex-sticky-layout-0-x-wrapper.vtex-sticky-layout-0-x-wrapper--top-menu-sticky-desktop > div > div.vtex-flex-layout-0-x-flexRow.vtex-flex-layout-0-x-flexRow--top-menu-wrapper-desktop > section > div > div:nth-child(2) > div > div > div.savegnagoio-store-theme-8-x-modalWrapperOpenContainer > div.savegnagoio-store-theme-8-x-containerModalRegionalization > div:nth-child(3) > div > button:nth-child(2)')
       button_cep2.click()
       sleep(1)
 
-      insert_cep = self.browser.find_element(By.CSS_SELECTOR, 'body > div.render-container.render-route-store-home > div > div.vtex-store__template.bg-base > div > div.vtex-sticky-layout-0-x-wrapper.vtex-sticky-layout-0-x-wrapper--top-menu-sticky-desktop > div > div.vtex-flex-layout-0-x-flexRow.vtex-flex-layout-0-x-flexRow--top-menu-wrapper-desktop > section > div > div:nth-child(2) > div > div > div.savegnagoio-app-regionalization-0-x-modalManagerWrapper.savegnagoio-app-regionalization-0-x-modalManagerWrapperOpened > div > form > input')
+      insert_cep = self.browser.find_element(By.CSS_SELECTOR, 'body > div.render-container.render-route-store-home > div > div.vtex-store__template.bg-base > div > div.vtex-sticky-layout-0-x-wrapper.vtex-sticky-layout-0-x-wrapper--top-menu-sticky-desktop > div > div.vtex-flex-layout-0-x-flexRow.vtex-flex-layout-0-x-flexRow--top-menu-wrapper-desktop > section > div > div:nth-child(2) > div > div > div.savegnagoio-store-theme-8-x-modalWrapperOpenContainer > div.savegnagoio-store-theme-8-x-containerModalRegionalization > div.savegnagoio-store-theme-8-x-containerModalStageThree > form > div > input')
       insert_cep.send_keys("14801-600")
       sleep(2)
 
 
-      b_insertcep = self.browser.find_element(By.CSS_SELECTOR, 'body > div.render-container.render-route-store-home > div > div.vtex-store__template.bg-base > div > div.vtex-sticky-layout-0-x-wrapper.vtex-sticky-layout-0-x-wrapper--top-menu-sticky-desktop > div > div.vtex-flex-layout-0-x-flexRow.vtex-flex-layout-0-x-flexRow--top-menu-wrapper-desktop > section > div > div:nth-child(2) > div > div > div.savegnagoio-app-regionalization-0-x-modalManagerWrapper.savegnagoio-app-regionalization-0-x-modalManagerWrapperOpened > div > form > button')
+      b_insertcep = self.browser.find_element(By.CSS_SELECTOR, 'body > div.render-container.render-route-store-home > div > div.vtex-store__template.bg-base > div > div.vtex-sticky-layout-0-x-wrapper.vtex-sticky-layout-0-x-wrapper--top-menu-sticky-desktop > div > div.vtex-flex-layout-0-x-flexRow.vtex-flex-layout-0-x-flexRow--top-menu-wrapper-desktop > section > div > div:nth-child(2) > div > div > div.savegnagoio-store-theme-8-x-modalWrapperOpenContainer > div.savegnagoio-store-theme-8-x-containerModalRegionalization > div.savegnagoio-store-theme-8-x-containerModalStageThree > form > button')
       b_insertcep.click()
       sleep(3)
 
@@ -66,7 +66,7 @@ class CrawlerSavegnago(Mercado):
     print('carregamento produtos...')
    # loading = False
     wait = WebDriverWait(self.browser, 10)
-    mostrar_mais = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "body > div.render-container.render-route-store-search > div > div.vtex-store__template.bg-base > div > div:nth-child(4) > div > div > section > div.relative.justify-center.flex > div > div.vtex-flex-layout-0-x-flexRow.vtex-flex-layout-0-x-flexRow--container__search-result-desktop > div > div.pr0.items-stretch.flex-grow-1.flex > div > div:nth-child(5) > div > div > div > div > div > a")))
+    mostrar_mais = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "body > div.render-container.render-route-store-search > div > div.vtex-store__template.bg-base > div > div:nth-child(3) > div > div > section > div.relative.justify-center.flex > div > div.vtex-flex-layout-0-x-flexRow.vtex-flex-layout-0-x-flexRow--container__search-result-desktop > div > div.pr0.items-stretch.flex-grow-1.flex > div > div:nth-child(5) > div > div > div > div > div > a")))
     
     while mostrar_mais.is_displayed():
       try: 
@@ -74,7 +74,7 @@ class CrawlerSavegnago(Mercado):
         sleep(5)
         ActionChains(self.browser).click(mostrar_mais).perform()
         #mostrar_mais.click()
-        mostrar_mais = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "body > div.render-container.render-route-store-search > div > div.vtex-store__template.bg-base > div > div:nth-child(4) > div > div > section > div.relative.justify-center.flex > div > div.vtex-flex-layout-0-x-flexRow.vtex-flex-layout-0-x-flexRow--container__search-result-desktop > div > div.pr0.items-stretch.flex-grow-1.flex > div > div:nth-child(5) > div > div > div > div > div > a")))
+        mostrar_mais = wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, "body > div.render-container.render-route-store-search > div > div.vtex-store__template.bg-base > div > div:nth-child(3) > div > div > section > div.relative.justify-center.flex > div > div.vtex-flex-layout-0-x-flexRow.vtex-flex-layout-0-x-flexRow--container__search-result-desktop > div > div.pr0.items-stretch.flex-grow-1.flex > div > div:nth-child(5) > div > div > div > div > div > a")))
 
       except StaleElementReferenceException:
         print('carregamento concluido!')
