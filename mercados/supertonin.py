@@ -1,3 +1,4 @@
+from caqui import synchronous
 import numpy
 from time import sleep
 import uuid
@@ -6,7 +7,7 @@ from selenium.webdriver.common.by import By
 from mercados.mercado import Mercado
 from datetime import date
 from bs4 import BeautifulSoup
-import pandas as pd
+# import pandas as pd
 from unidecode import unidecode
 
 
@@ -17,6 +18,8 @@ class CrawlerSuperTonin(Mercado):
         print('configurando...')
         
         url = "https://www.supertonin.com.br/"
+        # self.browser.get(url)
+        synchronous.go_to_page(url)
         self.browser.get(url)
         sleep(5)
         element = self.browser.find_element(By.CSS_SELECTOR,'a.popup-next-tip:nth-child(4)')
@@ -84,7 +87,7 @@ class CrawlerSuperTonin(Mercado):
             page += 1
 
         data = []
-        data = pd.DataFrame(dataProduct, columns=['Id_Produto', 'Id_Preco','Nome', 'Categoria', 'Fornecedor', 'Mercado', 'Imagem', 'Preco', 'Data']).sort_values('Preco')
+        # data = pd.DataFrame(dataProduct, columns=['Id_Produto', 'Id_Preco','Nome', 'Categoria', 'Fornecedor', 'Mercado', 'Imagem', 'Preco', 'Data']).sort_values('Preco')
         # print(data)
         
 
@@ -114,8 +117,8 @@ class CrawlerSuperTonin(Mercado):
         sleep(5)
 
         first_line = (self.Getprodutos())
-        products = pd.concat([products, first_line], join='inner', ignore_index=True)
-        prices = pd.concat([prices, first_line], join='inner', ignore_index=True)
+        # products = pd.concat([products, first_line], join='inner', ignore_index=True)
+        # prices = pd.concat([prices, first_line], join='inner', ignore_index=True)
 
         print('Busca completa!')
         print()

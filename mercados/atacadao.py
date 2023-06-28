@@ -6,7 +6,7 @@ from datetime import date
 from bs4 import BeautifulSoup
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
-import pandas as pd
+# import pandas as pd
 
 from mercados.mercado import Mercado
 
@@ -113,7 +113,7 @@ class CrawlerAtacadao(Mercado):
         dataProduct.append([product_id, price_id, product_name, product_category, product_supplier, product_mercado, product_img, product_price, product_date])
       
       data = []
-      data = pd.DataFrame(dataProduct, columns=['Id_Produto', 'Id_Preco', 'Nome', 'Categoria', 'Fornecedor', 'Mercado', 'Imagem', 'Preco', 'Data']).sort_values('Preco')
+      # data = pd.DataFrame(dataProduct, columns=['Id_Produto', 'Id_Preco', 'Nome', 'Categoria', 'Fornecedor', 'Mercado', 'Imagem', 'Preco', 'Data']).sort_values('Preco')
       
       print('produtos pegos!')
       print()
@@ -140,8 +140,8 @@ class CrawlerAtacadao(Mercado):
       print('configuração concluida!')
       print()
       
-      products = pd.DataFrame(columns=['Id_Produto', 'Nome', 'Fornecedor', 'Mercado', 'Imagem', 'Id_Preco'])
-      prices = pd.DataFrame(columns=['Id_Preco', 'Categoria', 'Preco', 'Data', 'Id_Produto'])
+      # products = pd.DataFrame(columns=['Id_Produto', 'Nome', 'Fornecedor', 'Mercado', 'Imagem', 'Id_Preco'])
+      # prices = pd.DataFrame(columns=['Id_Preco', 'Categoria', 'Preco', 'Data', 'Id_Produto'])
       res = []
 
       self.browser.get('https://www.atacadao.com.br/')
@@ -160,8 +160,8 @@ class CrawlerAtacadao(Mercado):
 
       first_line = self.getProduct()
       
-      products = pd.concat([products, first_line], join='inner', ignore_index=True)
-      prices = pd.concat([prices, first_line], join='inner', ignore_index=True)
+      # products = pd.concat([products, first_line], join='inner', ignore_index=True)
+      # prices = pd.concat([prices, first_line], join='inner', ignore_index=True)
       
       print('Busca completa!')
       print()
@@ -169,7 +169,7 @@ class CrawlerAtacadao(Mercado):
       print('### ATACADAO CONCLUIDO! ###')
       print()
       
-      res.append(products)
-      res.append(prices)
+      # res.append(products)
+      # res.append(prices)
       
       return res
