@@ -46,8 +46,8 @@ for searchProduct in searchProducts:
   browser = webdriver.Chrome(service=service,options=options)
 
   # Busca dos produtos no Atacacão
-  crawlerAtacadao = CrawlerAtacadao(searchProduct, browser)
-  crawlerAtacadaoRes = crawlerAtacadao.processa()
+  # crawlerAtacadao = CrawlerAtacadao(searchProduct, browser)
+  # crawlerAtacadaoRes = crawlerAtacadao.processa()
 
   # products = pd.concat([products, crawlerAtacadaoRes[0]], ignore_index=True)
   # prices = pd.concat([prices, crawlerAtacadaoRes[1]], ignore_index=True)

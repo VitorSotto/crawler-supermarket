@@ -1,3 +1,4 @@
+from caqui import synchronous
 from time import sleep
 import numpy as np
 import uuid
@@ -41,6 +42,7 @@ class CrawlerSavegnago(Mercado):
     url_base =  "https://www.savegnago.com.br/" 
     url_svng = (url_base + self.searchProduct)
     self.browser.get(url_svng)
+    # synchronous.get(url_svng)
 
   def FilterProducts(self):
     try:
@@ -155,6 +157,7 @@ class CrawlerSavegnago(Mercado):
       print('configurando...')
       
       self.browser.get("https://www.savegnago.com.br/")
+      # synchronous.get("https://www.savegnago.com.br/")
       sleep(5)
 
       self.insertCEP()

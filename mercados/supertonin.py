@@ -18,8 +18,8 @@ class CrawlerSuperTonin(Mercado):
         print('configurando...')
         
         url = "https://www.supertonin.com.br/"
-        # self.browser.get(url)
-        synchronous.go_to_page(url)
+        self.browser.get(url)
+        # synchronous.go_to_page(url)
         self.browser.get(url)
         sleep(5)
         element = self.browser.find_element(By.CSS_SELECTOR,'a.popup-next-tip:nth-child(4)')
@@ -108,9 +108,9 @@ class CrawlerSuperTonin(Mercado):
         sleep(5)
 
         # DataFrame para tabela de produtos
-        products = pd.DataFrame(columns=['Id_Produto', 'Nome', 'Fornecedor', 'Mercado', 'Imagem', 'Id_Preco'])
+        # products = pd.DataFrame(columns=['Id_Produto', 'Nome', 'Fornecedor', 'Mercado', 'Imagem', 'Id_Preco'])
         # DataFrame para tabela de preços
-        prices = pd.DataFrame(columns=['Id_Preco', 'Categoria', 'Preco', 'Data', 'Id_Produto'])
+        # prices = pd.DataFrame(columns=['Id_Preco', 'Categoria', 'Preco', 'Data', 'Id_Produto'])
         res = []
 
         self.Getsearch()
@@ -126,7 +126,7 @@ class CrawlerSuperTonin(Mercado):
         print('### SUPERTONIN CONCLUIDO! ###')
         print()
 
-        res.append(products)
-        res.append(prices)
+        # res.append(products)
+        # res.append(prices)
         
         return res
