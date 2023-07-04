@@ -1,0 +1,5 @@
+caqui
+unidecode
+selenium
+pandas
+beautifulsoup4
