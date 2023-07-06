@@ -1,4 +1,3 @@
-from caqui import synchronous
 from time import sleep
 import numpy as np
 import uuid
@@ -11,7 +10,7 @@ from selenium.common.exceptions import StaleElementReferenceException, NoSuchEle
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-# import pandas as pd
+import pandas as pd
 import unicodedata
 
 from mercados.mercado import Mercado
@@ -42,7 +41,6 @@ class CrawlerSavegnago(Mercado):
     url_base =  "https://www.savegnago.com.br/" 
     url_svng = (url_base + self.searchProduct)
     self.browser.get(url_svng)
-    # synchronous.get(url_svng)
 
   def FilterProducts(self):
     try:
@@ -137,7 +135,7 @@ class CrawlerSavegnago(Mercado):
 
     #print(f'produtos encontrados: {np.size(products)}')
     dataproducts = []
-    # dataproducts = pd.DataFrame(list_products, columns=['Id_Produto','Id_Preco', 'Nome', 'Categoria', 'Fornecedor', 'Mercado', 'Imagem', 'Preco', 'Data']).sort_values('Preco')
+    dataproducts = pd.DataFrame(list_products, columns=['Id_Produto','Id_Preco', 'Nome', 'Categoria', 'Fornecedor', 'Mercado', 'Imagem', 'Preco', 'Data']).sort_values('Preco')
     
       
     # df = dataproducts.sort_values('Preco')
@@ -157,7 +155,6 @@ class CrawlerSavegnago(Mercado):
       print('configurando...')
       
       self.browser.get("https://www.savegnago.com.br/")
-      # synchronous.get("https://www.savegnago.com.br/")
       sleep(5)
 
       self.insertCEP()
@@ -166,8 +163,8 @@ class CrawlerSavegnago(Mercado):
       print('configuração concluida!')
       print()
       
-      # products = pd.DataFrame(columns=['Id_Produto', 'Nome', 'Fornecedor', 'Mercado', 'Imagem', 'Id_Preco'])
-      # prices = pd.DataFrame(columns=['Id_Preco', 'Categoria', 'Preco', 'Data', 'Id_Produto'])
+      products = pd.DataFrame(columns=['Id_Produto', 'Nome', 'Fornecedor', 'Mercado', 'Imagem', 'Id_Preco'])
+      prices = pd.DataFrame(columns=['Id_Preco', 'Categoria', 'Preco', 'Data', 'Id_Produto'])
       res = []
       
       self.Searching()
@@ -184,8 +181,8 @@ class CrawlerSavegnago(Mercado):
 
       first_line = self.GetProducts()
       
-      # products = pd.concat([products, first_line], join='inner', ignore_index=True)
-      # prices = pd.concat([prices, first_line], join='inner', ignore_index=True)
+      products = pd.concat([products, first_line], join='inner', ignore_index=True)
+      prices = pd.concat([prices, first_line], join='inner', ignore_index=True)
 
       sleep(10)
       print("Busca Completa!")
@@ -193,8 +190,8 @@ class CrawlerSavegnago(Mercado):
       print('### SAVEGNAGO CONCLUIDO! ###')
       print()
 
-      # res.append(products)
-      # res.append(prices)
+      res.append(products)
+      res.append(prices)
       
       return res
         
