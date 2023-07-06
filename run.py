@@ -14,7 +14,7 @@ from mercados.supertonin import CrawlerSuperTonin
 from mercados.savegnago import CrawlerSavegnago
 
 homedir = os.path.expanduser("~")
-service = Service(f"/home/douglas/web_drivers/chromedriver.113")
+service = Service(f"{homedir}/chromedriver/stable/chromedriver")
 
 
 options = Options()
