@@ -7,7 +7,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.common.exceptions import WebDriverException
-# import pandas as pd
+import pandas as pd
 
 from mercados.atacadao import CrawlerAtacadao
 from mercados.supertonin import CrawlerSuperTonin
@@ -31,8 +31,8 @@ arquivo_abs_caminho = abs_pasta + '/' + arquivo
 with open(arquivo_abs_caminho, 'r') as arq:
   searchProducts = arq.read().split(',')
 
-# products = pd.DataFrame(columns=['Id_Produto', 'Nome', 'Fornecedor', 'Mercado', 'Imagem', 'Id_Preco'])
-# prices = pd.DataFrame(columns=['Id_Preco', 'Categoria', 'Preco', 'Data', 'Id_Produto'])
+products = pd.DataFrame(columns=['Id_Produto', 'Nome', 'Fornecedor', 'Mercado', 'Imagem', 'Id_Preco'])
+prices = pd.DataFrame(columns=['Id_Preco', 'Categoria', 'Preco', 'Data', 'Id_Produto'])
 
 print('=============================================================')
 print()
@@ -46,25 +46,25 @@ for searchProduct in searchProducts:
   browser = webdriver.Chrome(service=service,options=options)
 
   # Busca dos produtos no Atacacão
-  # crawlerAtacadao = CrawlerAtacadao(searchProduct, browser)
-  # crawlerAtacadaoRes = crawlerAtacadao.processa()
+  crawlerAtacadao = CrawlerAtacadao(searchProduct, browser)
+  crawlerAtacadaoRes = crawlerAtacadao.processa()
 
-  # products = pd.concat([products, crawlerAtacadaoRes[0]], ignore_index=True)
-  # prices = pd.concat([prices, crawlerAtacadaoRes[1]], ignore_index=True)
+  products = pd.concat([products, crawlerAtacadaoRes[0]], ignore_index=True)
+  prices = pd.concat([prices, crawlerAtacadaoRes[1]], ignore_index=True)
 
   # Busca dos produtos no SuperTonin
   crawlerSuperTonin = CrawlerSuperTonin(searchProduct, browser)
   crawlerSuperToninRes = crawlerSuperTonin.processa()
 
-  # products = pd.concat([products, crawlerSuperToninRes[0]], ignore_index=True)
-  # prices = pd.concat([prices, crawlerSuperToninRes[1]], ignore_index=True)
+  products = pd.concat([products, crawlerSuperToninRes[0]], ignore_index=True)
+  prices = pd.concat([prices, crawlerSuperToninRes[1]], ignore_index=True)
 
   # Busca dos produtos no Savegnago
   crawlerSavegnago = CrawlerSavegnago(searchProduct, browser)
   crawlerSavegnagoRes = crawlerSavegnago.processa()
 
-  # products = pd.concat([products, crawlerSavegnagoRes[0]], ignore_index=True)
-  # prices = pd.concat([prices, crawlerSavegnagoRes[1]], ignore_index=True)
+  products = pd.concat([products, crawlerSavegnagoRes[0]], ignore_index=True)
+  prices = pd.concat([prices, crawlerSavegnagoRes[1]], ignore_index=True)
 
   browser.close()
   print('Busca concluida!')
@@ -81,10 +81,10 @@ print()
 conn = sqlite3.connect("../server/prisma/dev.db")
 cursor = conn.cursor()
 
-# products.to_sql('products', conn, if_exists='append', index=False)
+products.to_sql('products', conn, if_exists='append', index=False)
 cursor.executemany('INSERT INTO Product (id, name, supplier, market, image, priceId) VALUES (?, ?, ?, ?, ?, ?)', products.to_numpy())
 
-# prices.to_sql('prices', conn, if_exists='append', index=False)
+prices.to_sql('prices', conn, if_exists='append', index=False)
 cursor.executemany('INSERT INTO Price (id, category, price, updatedAt, productId) VALUES (?, ?, ?, ?, ?)', prices.to_numpy())
 
 conn.commit()
