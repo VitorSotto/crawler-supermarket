@@ -85,7 +85,7 @@ class CrawlerSuperTonin(Mercado):
 
         data = []
         data = pd.DataFrame(dataProduct, columns=['Id_Produto', 'Id_Preco','Nome', 'Categoria', 'Fornecedor', 'Mercado', 'Imagem', 'Preco', 'Data']).sort_values('Preco')
-        print(data)
+        # print(data)
         
 
         print('carregamento concluido!')

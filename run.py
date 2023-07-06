@@ -81,10 +81,10 @@ print()
 conn = sqlite3.connect("../server/prisma/dev.db")
 cursor = conn.cursor()
 
-products.to_sql('products', conn, if_exists='append', index=False)
+# products.to_sql('products', conn, if_exists='append', index=False)
 cursor.executemany('INSERT INTO Product (id, name, supplier, market, image, priceId) VALUES (?, ?, ?, ?, ?, ?)', products.to_numpy())
 
-prices.to_sql('prices', conn, if_exists='append', index=False)
+# prices.to_sql('prices', conn, if_exists='append', index=False)
 cursor.executemany('INSERT INTO Price (id, category, price, updatedAt, productId) VALUES (?, ?, ?, ?, ?)', prices.to_numpy())
 
 conn.commit()
